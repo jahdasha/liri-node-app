@@ -34,6 +34,7 @@
 				var movieObject = JSON.parse(body);
 				//console.log(movieObject); // Show the text in the terminal
 				var movieResults =
+				"------------------------------ begin ------------------------------" + "\r\n"
 				"Title: " + movieObject.Title+"\r\n"+
 				"Year: " + movieObject.Year+"\r\n"+
 				"Imdb Rating: " + movieObject.imdbRating+"\r\n"+
@@ -44,7 +45,8 @@
 				"Rotten Tomatoes Rating: " + movieObject.tomatoRating+"\r\n"+
 				"Rotten Tomatoes URL: " + movieObject.tomatoURL + "\r\n" + 
 				"------------------------------ fin ------------------------------" + "\r\n";
-				console.log(movieResults)
+				console.log(movieResults);
+				log(movieResults); // calling log function
 			} else {
 				console.log("Error :"+ error);
 				return;
@@ -74,6 +76,7 @@
 					data[i].created_at + "\r\n" + 
 					"------------------------------ " + i + " ------------------------------" + "\r\n";
 					console.log(twitterResults);
+					log(twitterResults); // calling log function
 				}
 			}  else {
 				console.log("Error :"+ error);
@@ -100,6 +103,7 @@
 						"Preview Url: " + songInfo[i].preview_url + "\r\n" + 
 						"------------------------------ " + i + " ------------------------------" + "\r\n";
 						console.log(spotifyResults);
+						log(spotifyResults); // calling log function
 					}
 				}
 			}	else {
@@ -108,7 +112,7 @@
 			}
 		});
 	};
-	// Do What It Says function, uses the reads and writes module to call the access the random.txt file
+	// Do What It Says function, uses the reads and writes module to access the random.txt file and do what's written in it
 	function doWhatItSays() {
 		fs.readFile("random.txt", "utf8", function(error, data){
 			if (!error) {
@@ -119,3 +123,11 @@
 			}
 		});
 	};
+	// Do What It Says function, uses the reads and writes module to access the log.txt file and write everything that returns in terminal in the log.txt file
+	function log(logResults) {
+	  fs.appendFile("log.txt", logResults, (error) => {
+	    if(error) {
+	      throw error;
+	    }
+	  });
+	}
