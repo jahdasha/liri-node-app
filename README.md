@@ -27,10 +27,10 @@ node liri.js my-tweets
 node liri.js spotify-this-song '<song name here>'
 ```
 * shows the following information about the song in the terminal
-	1.artist(s)
-	2.song name
-	3.preview link of the song from spotify
-	4.album that the song is a part of
+	1. artist(s)
+	2. song name
+	3. preview link of the song from spotify
+	4. album that the song is a part of
 
 * Example for movie
 ```
