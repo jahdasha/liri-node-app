@@ -44,7 +44,7 @@
 				console.log("Error :"+ error);
 				return;
 			}
-		})
+		});
 	};
 	function myTweets() {
 		var client = new twitter({
@@ -59,6 +59,7 @@
 		client.get('statuses/user_timeline/', params, function(error, data, response){
 			if (!error) {
 				for(var i = 0; i < data.length; i++) {
+					//console.log(response); // Show the full response in the terminal
 					var twitterResults = 
 					"@" + data[i].user.screen_name + ": " + 
 					data[i].text + "\r\n" + 
@@ -72,18 +73,25 @@
 			}
 		});
 	}
-function spotifyThisSong(songName) {
-  spotify.search({ type: 'track', query: songName }, function(error, data) {
-    if(error) {
-      console.log('Error occurred: ' + error);
-      return;
-    }
-    var albumInfo = data.tracks.items[0];
-    var spotifyResults = 
-      "Artist: " + albumInfo.artists[0].name + "\r\n" +
-      "Track Name: " + albumInfo.name + "\r\n" +
-      "Album: " + albumInfo.album.name + "\r\n" +
-      "Preview Link: " + albumInfo.preview_url + "\r\n\r\n";
-    console.log(spotifyResults);
-  })
-}; // End spotifyCall()
+	function spotifyThisSong(songName) {
+		songName = process.argv[3];
+		spotify.search({ type: 'track', query: songName }, function(err, data) {
+			if(!err){
+				var songInfo = data.tracks.items;
+				for (var i = 0; i < 5; i++) {
+					if (songInfo[i] != undefined) {
+						var spotifyResults =
+						'Artist: ' + songInfo[i].artists[0].name + "\r\n" +
+						'Song: ' + songInfo[i].name + "\r\n" +
+						'Album: ' + songInfo[i].album.name + "\r\n" +
+						'Preview Url: ' + songInfo[i].preview_url + "\r\n" + 
+						"------------------------------ " + i + " ------------------------------" + "\r\n";
+						console.log(spotifyResults);
+					}
+				}
+			}	else {
+				console.log("Error :"+ err);
+				return;
+			}
+		});
+	};
