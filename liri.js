@@ -5,78 +5,85 @@
 //  * movie-this
 //  * do-what-it-says
 
-var fs = require("fs"); //reads and writes files
-var request = require("request");
-// var keys = require('./keys.js');
-// var twitter = require('twitter');
-// var spotify = require ('spotify');
+	var fs = require("fs"); //reads and writes files
+	var request = require("request");
+	var keys = require('./keys.js');
+	var twitter = require('twitter');
+	var spotify = require ('spotify');
 
-var liriArgument = process.argv[2];
+	var liriArgument = process.argv[2];
 
-fs.readFile("keys.js", "utf8", function(error, data) {
-	var keys= data;
-	console.log(keys);
-});
+	switch(liriArgument) {
+		case 'my-tweets': myTweets(); break;
+		case 'spotify-this-song': spotifyThisSong(); break;
+		case 'movie-this': movieThis(); break;
+		case 'do-what-it-says': doWhatItSays(); break;
+	};
 
-
-switch(liriArgument) {
-    case 'my-tweets': myTweets(); break;
-    case 'spotify-this-song': spotifyThisSong(); break;
-    case 'movie-this': movieThis(); break;
-    case 'do-what-it-says': doWhatItSays(); break;
-};
-
-
-// this would output the following information to the terminal:
-
-// Title
-// Year
-// IMDB Rating
-// Country
-// Language
-// Plot
-// Actors
-// Rotten Tomatoes Rating
-// Rotton Tomatoes UrL
-
-// if no movie is provided then the program will output information for the movie: 'Mr. Nobody'
-
-// if you haven't watched Mr. Nobody then you should: http://www.imdb.com/title/tt0485947/
-// You can catch it on Netflix
-
-function movieThis(){
-	var movie = process.argv[3];
-	request("http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&r=json&tomatoes=true", function (error, response, body) {
-		if (!error && response.statusCode == 200) {
-			var movieObject = JSON.parse(body);
-			console.log(movieObject); // Show the text in the terminal
-		}
-	})
-};
-
-// function movieThis() {
-//   var omdbApi = 'http://www.omdbapi.com/?t=';
-//   var movie = process.argv[3];
-//   var omdbParameters = '&y=&plot=short&r=json&tomatoes=true';
-//   var omdbUrl = omdbApi + movie + omdbParameters
-//   request(omdbUrl, function (error, response, body) {
-//     if (!error && response.statusCode == 200) {
-//       var movieResults = 
-//         "Title: " + JSON.parse(body)["Title"] + "\r\n" +
-//         "Year: " + JSON.parse(body)["Year"] + "\r\n" +
-//         "Country: " + JSON.parse(body)["Country"] + "\r\n" +
-//         "Language: " + JSON.parse(body)["Language"] + "\r\n" +
-//         "Rated: " + JSON.parse(body)["Rated"] + "\r\n" +
-//         "Released: " + JSON.parse(body)["Released"] + "\r\n" +
-//         "Genre: " + JSON.parse(body)["Genre"] + "\r\n" +
-//         "Director: " + JSON.parse(body)["Director"] + "\r\n" +
-//         "Writer: " + JSON.parse(body)["Writer"] + "\r\n" +
-//         "Actors: " + JSON.parse(body)["Actors"] + "\r\n" +
-//         "Plot: " + JSON.parse(body)["Plot"] + "\r\n" +
-//         "IMDB Rating: " + JSON.parse(body)["imdbRating"] + "\r\n" +
-//         "Rotten Tomatoes Rating: " + JSON.parse(body)["tomatoRating"] + "\r\n" +
-//          "Rotten Tomato URL: " + JSON.parse(body)["tomatoURL"] + "\r\n\r\n";
-//       console.log(movieResults);
-//     }
-//   })
-// }; // End movieCall()
+	function movieThis(){
+		var movie = process.argv[3];
+		if (!movie) {
+			movie = 'mr nobody'
+		};
+		request("http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&r=json&tomatoes=true", function (error, response, body) {
+			if (!error && response.statusCode == 200) {
+				var movieObject = JSON.parse(body);
+				//console.log(movieObject); // Show the text in the terminal
+				var movieResults =
+				'Title: ' + movieObject.Title+"\r\n"+
+				'Year: ' + movieObject.Year+"\r\n"+
+				'Imdb Rating: ' + movieObject.imdbRating+"\r\n"+
+				'Country: ' + movieObject.Country+"\r\n"+
+				'Language: ' + movieObject.Language+"\r\n"+
+				'Plot: ' + movieObject.Plot+"\r\n"+
+				'Actors: ' + movieObject.Actors+"\r\n"+
+				'Rotten Tomatoes Rating: ' + movieObject.tomatoRating+"\r\n"+
+				'Rotten Tomatoes URL: ' + movieObject.tomatoURL;
+				console.log(movieResults)
+			} else {
+				console.log("Error :"+ error);
+				return;
+			}
+		})
+	};
+	function myTweets() {
+		var client = new twitter({
+			consumer_key: keys.twitterKeys.consumer_key,
+			consumer_secret: keys.twitterKeys.consumer_secret,
+			access_token_key: keys.twitterKeys.access_token_key,
+			access_token_secret: keys.twitterKeys.access_token_secret, 
+		});
+		var twitterUsername = "JahdashaFlagg";
+		twitterUsername = process.argv[3];
+		params = {screen_name: twitterUsername};
+		client.get('statuses/user_timeline/', params, function(error, data, response){
+			if (!error) {
+				for(var i = 0; i < data.length; i++) {
+					var twitterResults = 
+					"@" + data[i].user.screen_name + ": " + 
+					data[i].text + "\r\n" + 
+					data[i].created_at + "\r\n" + 
+					"------------------------------ " + i + " ------------------------------" + "\r\n";
+					console.log(twitterResults);
+				}
+			}  else {
+				console.log("Error :"+ error);
+				return;
+			}
+		});
+	}
+function spotifyThisSong(songName) {
+  spotify.search({ type: 'track', query: songName }, function(error, data) {
+    if(error) {
+      console.log('Error occurred: ' + error);
+      return;
+    }
+    var albumInfo = data.tracks.items[0];
+    var spotifyResults = 
+      "Artist: " + albumInfo.artists[0].name + "\r\n" +
+      "Track Name: " + albumInfo.name + "\r\n" +
+      "Album: " + albumInfo.album.name + "\r\n" +
+      "Preview Link: " + albumInfo.preview_url + "\r\n\r\n";
+    console.log(spotifyResults);
+  })
+}; // End spotifyCall()
