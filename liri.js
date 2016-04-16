@@ -1,22 +1,18 @@
-// 2. At the top of the liri.js file make it so you grab the data from keys.js and store it into a variable to use
-// 3. Make it so liri.js can take in one of the following arguments
-//  * my-tweets
-//  * spotify-this-song
-//  * movie-this
-//  * do-what-it-says
-
+	// Node module imports needed to run the functions
 	var fs = require("fs"); //reads and writes files
 	var request = require("request");
 	var keys = require("./keys.js");
 	var twitter = require("twitter");
 	var spotify = require ("spotify");
 	var liriArgument = process.argv[2];
-
+// ---------------------------------------------------------------------------------------------------------------
+	// Possible commands for this liri app
 	switch(liriArgument) {
 		case "my-tweets": myTweets(); break;
 		case "spotify-this-song": spotifyThisSong(); break;
 		case "movie-this": movieThis(); break;
 		case "do-what-it-says": doWhatItSays(); break;
+		// Instructions displayed in terminal to the user
 		default: console.log("\r\n" +"Try typing one of the following commands after 'node liri.js' : " +"\r\n"+
 			"1. my-tweets 'any twitter name' " +"\r\n"+
 			"2. spotify-this-song 'any song name' "+"\r\n"+
@@ -24,7 +20,9 @@
 			"4. do-what-it-says."+"\r\n"+
 			"Be sure to put the movie or song name in quotation marks if it's more than one word.");
 	};
-
+// ---------------------------------------------------------------------------------------------------------------
+// Functions
+	// Movie function, uses the Request module to call the OMDB api
 	function movieThis(){
 		var movie = process.argv[3];
 		if(!movie){
@@ -53,6 +51,7 @@
 			}
 		});
 	};
+	// Tweet function, uses the Twitter module to call the Twitter api
 	function myTweets() {
 		var client = new twitter({
 			consumer_key: keys.twitterKeys.consumer_key,
@@ -82,6 +81,7 @@
 			}
 		});
 	}
+	// Spotify function, uses the Spotify module to call the Spotify api
 	function spotifyThisSong(songName) {
 		var songName = process.argv[3];
 		if(!songName){
@@ -108,6 +108,7 @@
 			}
 		});
 	};
+	// Do What It Says function, uses the reads and writes module to call the access the random.txt file
 	function doWhatItSays() {
 		fs.readFile("random.txt", "utf8", function(error, data){
 			if (!error) {
