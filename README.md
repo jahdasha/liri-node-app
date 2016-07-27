@@ -18,11 +18,13 @@
 So if you were to type the below command you'd get the last 20 tweets I created (There may not be 20 tweets for me I just created an account)
 
 * Example for twitter
+![ScreenShot](img/twitter-call.png "Twitter")
 ```
 node liri.js my-tweets
 ```
 
 * Example for spotify
+![ScreenShot](img/spotify-call.png "Spotify")
 ```
 node liri.js spotify-this-song '<song name here>'
 ```
@@ -44,13 +46,13 @@ node liri.js movie-this '<movie name here>'
 	5. Language
 	6. Plot
 	7. Actors
-	8. Rotten Tomatoes Rating 
+	8. Rotten Tomatoes Rating
 	9. Rotten Tomatoes URL
 
 
 * Example for do what it says
 ```
-node liri.js do-what-it-says 
+node liri.js do-what-it-says
 ```
 
 
@@ -59,7 +61,7 @@ node liri.js do-what-it-says
 	2. [twitter](https://www.npmjs.com/package/twitter)
 	3. [spotify](https://www.npmjs.com/package/spotify)
 	4. [request](https://www.npmjs.com/package/request)
-	
+
 * to install these npm packages run these commands one at a time.
 ```
 npm install twitter
